@@ -8,8 +8,7 @@ import openrouteservice
 import folium
 
 # Define your API key
-# api_key = 'your_api_key_here'
-api_key = '5b3ce3597851110001cf62480d7ec5c3c8ff4a5989edbd6e61cfd2f0'
+api_key = 'your_api_key_here'
 
 # Create a client object
 client = openrouteservice.Client(key=api_key)

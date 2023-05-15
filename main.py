@@ -3,9 +3,10 @@ import folium
 import tkinter as tk
 from tkinter import messagebox
 import webbrowser
+import pyperclip
 
 # Define your API key
-api_key = '5b3ce3597851110001cf62480d7ec5c3c8ff4a5989edbd6e61cfd2f0'
+api_key = 'your_api_key_here'
 
 # Create a client object
 client = openrouteservice.Client(key=api_key)
@@ -35,6 +36,7 @@ layer_options = {
     "CartoDB Positron": folium.TileLayer("CartoDB Positron"),
     "CartoDB Dark_Matter": folium.TileLayer("CartoDB Dark_Matter")
 }
+
 
 # Define the function to get the directions and display the map
 def get_directions():
@@ -86,6 +88,28 @@ def get_directions():
 
     # Open the map in a web browser
     webbrowser.open(map_file)
+
+    # Display the directions as text
+    distance = directions['features'][0]['properties']['segments'][0]['distance']
+    duration = directions['features'][0]['properties']['segments'][0]['duration']
+    instructions = directions['features'][0]['properties']['segments'][0]['steps']
+    text = f"Distance: {distance:.2f} meters\nDuration: {duration:.2f} seconds\n\nInstructions:\n"
+    for i, step in enumerate(instructions):
+        text += f"{i + 1}. {step['instruction']}\n"
+    new_window = tk.Toplevel(window)
+    new_window.title("Directions")
+    new_window.geometry("400x400")
+    text_label = tk.Label(new_window, text=text)
+    text_label.pack()
+
+    # Define the function to copy the directions text to the clipboard
+    def copy_text():
+        pyperclip.copy(text)
+
+    # Define the "Copy Text" button
+    copy_button = tk.Button(new_window, text="Copy Text", command=copy_text)
+    copy_button.pack()
+
 
 # Define the "Get Directions" button
 button = tk.Button(window, text="Get Directions", command=get_directions)
